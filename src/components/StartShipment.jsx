@@ -14,6 +14,9 @@ import { isAddress } from "ethers";
 import { TransactionButton, useSendTransaction } from "thirdweb/react"
 import { prepareContractCall, resolveMethod } from "thirdweb"
 import { CONTRACT } from "@/utils/constants"
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const StartShipment = () => {
     const [shipmentId, setShipmentId] = useState("")
@@ -31,41 +34,6 @@ const StartShipment = () => {
     )
     
     const [overlay, setOverlay] = React.useState(<OverlayTwo />)
-
-    const handleCreateShipment = async () => {
-        // Validate the customer address
-        if (!isAddress(customerAddress)) {
-          alert("Invalid customer address");
-          return;
-        }
-    
-        try {
-          const transaction = prepareContractCall({
-            contract: CONTRACT,
-            method: "createShipment",
-            params: [shipmentId, customerAddress, productType, quantity, price],
-          });
-    
-          const result = await sendTransaction(transaction);
-    
-          if (result && result.transactionHash) {
-            console.log("Transaction successful:", result.transactionHash);
-            // Clear the form inputs
-            setShipmentId("");
-            setProductType("");
-            setCustomerAddress("");
-            setQuantity("");
-            setPrice("");
-            // Optionally close the modal
-            onClose();
-          } else {
-            console.error("Transaction failed:", result);
-          }
-        } catch (error) {
-          console.error("Error creating shipment:", error);
-        }
-      };
-    
 
     return (
         <div>
@@ -132,13 +100,13 @@ const StartShipment = () => {
                 <ModalFooter>
                     <TransactionButton
                         // onClick={handleCreateShipment }
-                        transaction={() => {
+                         transaction={() => {
                             const tx = prepareContractCall({
                                 contract: CONTRACT,
-                                method: "startShipment",
+                                method: resolveMethod("startShipment"),
                                 params: [
-                                    shipmentId,
                                     customerAddress,
+                                    shipmentId,
                                     productType,
                                 ],
                             })
@@ -146,17 +114,17 @@ const StartShipment = () => {
                         }}
                        
                         onTransactionSent={(result) => {
-                            console.log("Transaction submitted", result.transactionHash)
+                            toast.info("Transaction submitted: " + result.transactionHash);
                         }}
                         onTransactionConfirmed={(receipt) => {
-                            console.log("Transaction confirmed", receipt.transactionHash)
+                            toast.success("Transaction confirmed: " + receipt.transactionHash);
                             setShipmentId("")
                             setProductType("")
                             setCustomerAddress("")
                             onClose()
                         }}
                         onError={(error) => {
-                            console.error("Transaction error", error)
+                            toast.error("Transaction error: " + error.message);
                         }}
                     >
                         Start Shipment
@@ -164,6 +132,7 @@ const StartShipment = () => {
                 </ModalFooter>
             </ModalContent>
         </Modal>
+        <ToastContainer />
         </div>
     )
 }

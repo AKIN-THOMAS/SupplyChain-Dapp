@@ -6,6 +6,7 @@ import { useActiveAccount, useReadContract } from "thirdweb/react"
 import { CONTRACT } from "@/utils/constants"
 import StartShipment from "./StartShipment"
 import VerifyProduct from "./VerifyProduct"
+import CompleteShipment from "./CompleteShipment"
 
 
 const Sidebar = ({ setIsOpen, isOpened }) => {
@@ -45,6 +46,7 @@ const Sidebar = ({ setIsOpen, isOpened }) => {
                             <CreateShipment className="cursor-pointer"/>
                             <StartShipment className="cursor-pointer"/>
                             <VerifyProduct className="cursor-pointer"/>
+                            <CompleteShipment className="cursor-pointer"/>
                         </>
                     )}
                     <div className="flex justify-center items-center my-20 p-3 w-[170px] h-[210px] rounded-[20px] border border-[rgba(190,18,60,0.7)] bg-[rgba(248,231,235,0.4)]">

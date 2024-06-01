@@ -13,6 +13,9 @@ import {
 import { TransactionButton, useSendTransaction } from "thirdweb/react"
 import { prepareContractCall, resolveMethod } from "thirdweb"
 import { CONTRACT } from "@/utils/constants"
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const VerifyProduct = () => {
     const [shipmentId, setShipmentId] = useState("")
@@ -67,21 +70,21 @@ const VerifyProduct = () => {
                             transaction={() => {
                                 const tx = prepareContractCall({
                                     contract: CONTRACT,
-                                    method: "verifyProduct",
+                                    method: resolveMethod("verifyProduct"),
                                     params: [shipmentId],
                                 })
                                 return tx
                             }}
                             onTransactionSent={(result) => {
-                                console.log("Transaction submitted", result.transactionHash)
+                                toast.info("Transaction submitted: " + result.transactionHash);
                             }}
                             onTransactionConfirmed={(receipt) => {
-                                console.log("Transaction confirmed", receipt.transactionHash)
+                                toast.success("Transaction confirmed: " + receipt.transactionHash);
                                 setShipmentId("")
                                 onClose()
                             }}
                             onError={(error) => {
-                                console.error("Transaction error", error)
+                                toast.error("Transaction error: " + error.message);
                             }}
                         >
                             Verify Product
@@ -89,6 +92,7 @@ const VerifyProduct = () => {
                     </ModalFooter>
                 </ModalContent>
             </Modal>
+            <ToastContainer />
         </div>
     )
 }

@@ -1,7 +1,7 @@
 // components/Layout.js
 import React, { useState } from "react"
 import Sidebar from "./../components/Sidebar"
-import NavBar from "@/components/NavBar"
+// import NavBar from "@/components/NavBar"
 
 const DashLayout = ({ children }) => {
     const [isOpened, setIsOpen] = useState(false)

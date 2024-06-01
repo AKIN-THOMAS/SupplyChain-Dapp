@@ -13,9 +13,11 @@ import React, { useState } from "react"
 import { TransactionButton, useSendTransaction } from "thirdweb/react"
 import { prepareContractCall, resolveMethod } from "thirdweb"
 import { CONTRACT } from "@/utils/constants"
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const CreateShipment = () => {
-  // const { mutate: sendTransaction, isLoading, isError } = useSendTransaction()
 
   // State variables for each input field
   const [shipmentId, setShipmentId] = useState("")
@@ -119,25 +121,28 @@ const CreateShipment = () => {
               transaction={() => {
                 const tx = prepareContractCall({
                   contract: CONTRACT,
-                  method: "createShipment",
+                  method: resolveMethod("createShipment"),
                   params: [shipmentId, customerAddress, productType, quantity, price],
-                })
-                return tx
+                });
+                return tx;
               }}
               onTransactionSent={(result) => {
-                console.log("Transaction submitted", result.transactionHash)
+                // Notification
+                toast.info("Transaction submitted: " + result.transactionHash);
               }}
               onTransactionConfirmed={(receipt) => {
-                console.log("Transaction confirmed", receipt.transactionHash)
-                setShipmentId("")
-                setProductType("")
-                setCustomerAddress("")
-                setQuantity("")
-                setPrice("")
-                onClose()
+                // Notification
+                toast.success("Transaction confirmed: " + receipt.transactionHash);
+                setShipmentId("");
+                setProductType("");
+                setCustomerAddress("");
+                setQuantity("");
+                setPrice("");
+                onClose();
               }}
               onError={(error) => {
-                console.error("Transaction error", error)
+                // Notification
+                toast.error("Transaction error: " + error.message);
               }}
             >
               Create
@@ -145,6 +150,7 @@ const CreateShipment = () => {
           </ModalFooter>
         </ModalContent>
       </Modal>
+      <ToastContainer />
     </div>
   )
 }
