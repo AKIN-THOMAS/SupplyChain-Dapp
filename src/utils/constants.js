@@ -15,8 +15,6 @@ export const client = createThirdwebClient({
 export const chain = defineChain(11155111)
 export const CONTRACT_ADDRESS = "0x7dF5CD0251CABB03EE00C678400C0413F9F30E48"
 
-console.log('Client ID:', clientId);
-console.log('Secret Key:', secretKey);
 
 
 const contractABI = [

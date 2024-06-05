@@ -1,89 +1,11 @@
-// import React, { useState } from "react"
-// import { Input, Button, Box, Text } from "@chakra-ui/react"
-// import { useReadContract, TransactionButton } from "thirdweb/react"
-// import { CONTRACT } from "@/utils/constants"
-// import { prepareContractCall } from "thirdweb"
-
-// const ShipmentDetails = () => {
-//     const [shipmentId, setShipmentId] = useState()
-
-//     const { data: shipmentDetail, isLoading: loadingShipmentDetail } = useReadContract({
-//         contract: CONTRACT,
-//         method: "shipmentDetails",
-//         params: [shipmentId],
-//     })
-
-//     const replacer = (key, value) => {
-//         if (typeof value === "bigint") {
-//             return value.toString()
-//         }
-//         return value
-//     }
-//     const keys = [
-//         "shipmentId",
-//         "producer",
-//         "customer",
-//         "productType",
-//         "quantity",
-//         "timestamp",
-//         "deliveryTime",
-//         "verified",
-//         "isPaid",
-//         "shipmentStages",
-//         "price",
-//     ]
-
-//     const shipmentDetailObject = shipmentDetail
-//         ? Object.fromEntries(shipmentDetail.map((value, index) => [keys[index], value]))
-//         : null
-
-//     return (
-//         <div>
-//             <Box className="mt-40 ml-[30px] mr-[70px]">
-//                 <Box className="mb-4">
-//                     <Input
-//                         placeholder="Enter Shipment ID"
-//                         value={shipmentId}
-//                         onChange={(e) => setShipmentId(e.target.value)}
-//                     />
-//                     <TransactionButton
-//                         transaction={() =>
-//                             prepareContractCall({
-//                                 contract: CONTRACT,
-//                                 method: "shipmentDetails",
-//                                 params: shipmentId,
-//                             })
-//                         }
-//                         className="mt-2"
-//                     >
-//                         Get Shipment Details
-//                     </TransactionButton>
-//                 </Box>
-//                 {loadingShipmentDetail ? (
-//                     <p>Loading...</p>
-//                 ) : (
-//                     <div className="mt-4">
-//                         <h3>Shipment Details:</h3>
-//                         {shipmentDetailObject ? (
-//                             <pre>{JSON.stringify(shipmentDetailObject, replacer, 2)}</pre>
-//                         ) : (
-//                             <p>No details available for the given shipment ID.</p>
-//                         )}
-//                     </div>
-//                 )}
-//             </Box>
-//         </div>
-//     )
-// }
-
-// export default ShipmentDetails
-
-import React, { useState } from "react"
+"use client"
+import React, { useState, useEffect } from "react"
 import { Input, Button, Box, Text, VStack, HStack, Divider, Spinner } from "@chakra-ui/react"
 import { useReadContract, TransactionButton } from "thirdweb/react"
 import { CONTRACT } from "@/utils/constants"
 import { prepareContractCall } from "thirdweb"
 import CreateShipment from "./CreateShipment"
+import QRCode from "qrcode.react"
 
 const ShipmentDetails = ({ onCreateShipment }) => {
   const [shipmentId, setShipmentId] = useState("")
@@ -93,6 +15,20 @@ const ShipmentDetails = ({ onCreateShipment }) => {
     method: "shipmentDetails",
     params: [shipmentId],
   })
+
+  const [shipmentDetails, setShipmentDetails] = useState(null)
+  const [qrCodeValue, setQrCodeValue] = useState("")
+
+  useEffect(() => {
+    if (shipmentDetail && shipmentDetail.isCompleted) {
+      setShipmentDetails(shipmentDetail)
+      setQrCodeValue(JSON.stringify(shipmentDetail))
+    }
+  }, [shipmentDetail])
+
+  const handlePrint = () => {
+    window.print()
+  }
 
   const replacer = (key, value) => {
     if (typeof value === "bigint") {
@@ -131,7 +67,7 @@ const ShipmentDetails = ({ onCreateShipment }) => {
 
   return (
     <div>
-        <p className="flex justify-center items-center text-[24px]">Alpinist Chain</p>
+      <p className="flex justify-center items-center text-[24px]">Alpinist Chain</p>
       <Box className="mt-20 ml-[30px] mr-[70px]">
         <Box className="mb-4">
           <Input
@@ -155,11 +91,11 @@ const ShipmentDetails = ({ onCreateShipment }) => {
         {loadingShipmentDetail ? (
           <div className="flex justify-center items-center h-full">
             <Spinner
-                thickness='4px'
-                speed='0.65s'
-                emptyColor='gray.200'
-                color='bg-gray-800'
-                size='xl'
+              thickness="4px"
+              speed="0.65s"
+              emptyColor="gray.200"
+              color="bg-gray-800"
+              size="xl"
             />
           </div>
         ) : (
@@ -194,6 +130,14 @@ const ShipmentDetails = ({ onCreateShipment }) => {
           ))
         )}
       </Box>
+      {isShipmentNotFound && (
+        <> {/* Combined Fragment */}
+          <Box>
+            <Text>QR Code will display here!</Text>
+          </Box>
+        </>
+      )}
+      
     </div>
   )
 }

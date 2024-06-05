@@ -128,11 +128,11 @@ const CreateShipment = () => {
               }}
               onTransactionSent={(result) => {
                 // Notification
-                toast.info("Transaction submitted: " + result.transactionHash);
+                toast.info(result.transactionHash);
               }}
               onTransactionConfirmed={(receipt) => {
                 // Notification
-                toast.success("Transaction confirmed: " + receipt.transactionHash);
+                toast.success(receipt.transactionHash);
                 setShipmentId("");
                 setProductType("");
                 setCustomerAddress("");
@@ -142,7 +142,7 @@ const CreateShipment = () => {
               }}
               onError={(error) => {
                 // Notification
-                toast.error("Transaction error: " + error.message);
+                toast.error(error.message);
               }}
             >
               Create

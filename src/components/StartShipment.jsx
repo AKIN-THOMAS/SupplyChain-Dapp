@@ -114,17 +114,17 @@ const StartShipment = () => {
                         }}
                        
                         onTransactionSent={(result) => {
-                            toast.info("Transaction submitted: " + result.transactionHash);
+                            toast.info(result.transactionHash);
                         }}
                         onTransactionConfirmed={(receipt) => {
-                            toast.success("Transaction confirmed: " + receipt.transactionHash);
+                            toast.success(receipt.transactionHash);
                             setShipmentId("")
                             setProductType("")
                             setCustomerAddress("")
                             onClose()
                         }}
                         onError={(error) => {
-                            toast.error("Transaction error: " + error.message);
+                            toast.error(error.message);
                         }}
                     >
                         Start Shipment

@@ -1,5 +1,4 @@
 import { ConnectButton, useActiveAccount } from "thirdweb/react";
-import CreateShipment from "./CreateShipment";
 import { chain, client } from "@/utils/constants";
 
 const Login = () => {
@@ -16,7 +15,6 @@ const Login = () => {
               url: "https://example.com",
             }}
           />
-          {/* <CreateShipment /> */}
         </>
       ) : (
         <>
